@@ -1,5 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe Client, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  describe "Validations" do
+    it "is not valid when name is empty" do
+      client = Client.new
+      expect(client).to_not be_valid
+    end
+  end
 end
