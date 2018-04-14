@@ -7,8 +7,68 @@ RSpec.describe Payment, type: :model do
       buyer = Buyer.create(:name => Faker::Name.name, :email => Faker::Internet.email, :CPF => "111.111.111-11")
       boleto = Boleto.create(:number => Faker::Number.number(25))
 
-      payment = Payment.new(:client => client, :buyer => buyer, :method => boleto)
+      payment = Payment.new(:client => client,
+                            :buyer => buyer,
+                            :method => boleto)
       expect(payment).to_not be_valid
     end
+
+    it "is not valid when client is empty" do
+      buyer = Buyer.create(:name => Faker::Name.name, :email => Faker::Internet.email, :CPF => "111.111.111-11")
+      boleto = Boleto.create(:number => Faker::Number.number(25))
+
+      payment = Payment.new(:amount => Faker::Number.decimal(2),
+                            :buyer => buyer,
+                            :method => boleto)
+      expect(payment).to_not be_valid
+    end
+
+    it "is not valid when buyer is empty" do
+      client = Client.create(:name => Faker::Company.name)
+      boleto = Boleto.create(:number => Faker::Number.number(25))
+
+      payment = Payment.new(:amount => Faker::Number.decimal(2),
+                            :client => client,
+                            :method => boleto)
+      expect(payment).to_not be_valid
+    end
+
+    it "is not valid when method is empty" do
+      buyer = Buyer.create(:name => Faker::Name.name, :email => Faker::Internet.email, :CPF => "111.111.111-11")
+      client = Client.create(:name => Faker::Company.name)
+
+      payment = Payment.new(:amount => Faker::Number.decimal(2),
+                            :buyer => buyer,
+                            :client => client)
+      expect(payment).to_not be_valid
+    end
+
+    it "is valid when has everything and boleto" do
+      buyer = Buyer.create(:name => Faker::Name.name, :email => Faker::Internet.email, :CPF => "111.111.111-11")
+      client = Client.create(:name => Faker::Company.name)
+      boleto = Boleto.create(:number => Faker::Number.number(25))
+
+      payment = Payment.new(:amount => Faker::Number.decimal(2),
+                            :buyer => buyer,
+                            :client => client,
+                            :method => boleto)
+      expect(payment).to be_valid
+    end
+
+    it "is valid when has everything and card" do
+      buyer = Buyer.create(:name => Faker::Name.name, :email => Faker::Internet.email, :CPF => "111.111.111-11")
+      client = Client.create(:name => Faker::Company.name)
+      card = Card.create(:holder_name => Faker::Name.name,
+                         :number => Faker::Number.number(15),
+                         :expiration_date => Time.now + 1.year,
+                         :cvv => Faker::Number.number(3))
+
+      payment = Payment.new(:amount => Faker::Number.decimal(2),
+                            :buyer => buyer,
+                            :client => client,
+                            :method => card)
+      expect(payment).to be_valid
+    end
+
   end
 end
