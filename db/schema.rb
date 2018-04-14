@@ -48,8 +48,8 @@ ActiveRecord::Schema.define(version: 2018_04_13_232926) do
     t.float "amount"
     t.bigint "client_id"
     t.bigint "buyer_id"
-    t.string "payment_type"
-    t.integer "payment_id"
+    t.string "method_type"
+    t.integer "method_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["buyer_id"], name: "index_payments_on_buyer_id"
