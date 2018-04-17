@@ -48,9 +48,14 @@ class PaymentService
 
     method = create_payment_method
     return if method.nil?
-    Payment.create(method: method,
-                   buyer: buyer,
-                   amount: @payment_amount,
-                   client: client)
+    payment = Payment.create(method: method,
+                             buyer: buyer,
+                             amount: @payment_amount,
+                             client: client)
+
+    if payment.method_type == "Boleto"
+      return payment.method
+    end
+    return payment
   end
 end

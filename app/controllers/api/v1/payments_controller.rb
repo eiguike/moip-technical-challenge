@@ -4,11 +4,7 @@ class Api::V1::PaymentsController < ApplicationController
   def create
     payment = PaymentService.perform(payment_create_params)
     if payment
-      if payment.method_type == "Boleto"
-        render json: payment.method, status: 201
-      else
-        render json: payment, status: 201
-      end
+      render json: payment, status: 201
     else
       render json: {}, status: 400
     end
