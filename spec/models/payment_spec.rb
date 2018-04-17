@@ -9,7 +9,8 @@ RSpec.describe Payment, type: :model do
 
       payment = Payment.new(:client => client,
                             :buyer => buyer,
-                            :method => boleto)
+                            :method => boleto,
+                            :status => "success")
       expect(payment).to_not be_valid
     end
 
@@ -19,7 +20,8 @@ RSpec.describe Payment, type: :model do
 
       payment = Payment.new(:amount => Faker::Number.decimal(2),
                             :buyer => buyer,
-                            :method => boleto)
+                            :method => boleto,
+                            :status => "success")
       expect(payment).to_not be_valid
     end
 
@@ -29,7 +31,8 @@ RSpec.describe Payment, type: :model do
 
       payment = Payment.new(:amount => Faker::Number.decimal(2),
                             :client => client,
-                            :method => boleto)
+                            :method => boleto,
+                            :status => "success")
       expect(payment).to_not be_valid
     end
 
@@ -39,11 +42,12 @@ RSpec.describe Payment, type: :model do
 
       payment = Payment.new(:amount => Faker::Number.decimal(2),
                             :buyer => buyer,
-                            :client => client)
+                            :client => client,
+                            :status => "success")
       expect(payment).to_not be_valid
     end
 
-    it "is valid when has everything and boleto" do
+    it "is valid when has everything and it is for boleto" do
       buyer = Buyer.create(:name => Faker::Name.name, :email => Faker::Internet.email, :CPF => "111.111.111-11")
       client = Client.create(:name => Faker::Company.name)
       boleto = Boleto.create(:number => Faker::Number.number(25))
@@ -51,11 +55,12 @@ RSpec.describe Payment, type: :model do
       payment = Payment.new(:amount => Faker::Number.decimal(2),
                             :buyer => buyer,
                             :client => client,
-                            :method => boleto)
+                            :method => boleto,
+                            :status => "success")
       expect(payment).to be_valid
     end
 
-    it "is valid when has everything and card" do
+    it "is valid when has everything and it is for card" do
       buyer = Buyer.create(:name => Faker::Name.name, :email => Faker::Internet.email, :CPF => "111.111.111-11")
       client = Client.create(:name => Faker::Company.name)
       card = Card.create(:holder_name => Faker::Name.name,
@@ -66,7 +71,8 @@ RSpec.describe Payment, type: :model do
       payment = Payment.new(:amount => Faker::Number.decimal(2),
                             :buyer => buyer,
                             :client => client,
-                            :method => card)
+                            :method => card,
+                            :status => "success")
       expect(payment).to be_valid
     end
 
