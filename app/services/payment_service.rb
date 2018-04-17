@@ -1,10 +1,23 @@
 class PaymentService
   def initialize(params)
-    @payment_method = params[:method_type]
-    @payment_amount = params[:amount]
-    @client = params[:client]
-    @buyer = params[:buyer]
-    @method = params[:method]
+    if params.key? :method_type
+      @payment_method = params[:method_type]
+    end
+    if params.key? :amount
+      @payment_amount = params[:amount]
+    end
+    if params.key? :client
+      @client = params[:client]
+    end
+    if params.key? :buyer
+      @buyer = params[:buyer]
+    end
+    if params.key? :method
+      @method = params[:method]
+    end
+    if params.key? :id
+      @payment_id = params[:id]
+    end
   end
 
   def self.perform(params)
@@ -20,15 +33,15 @@ class PaymentService
   end
 
   def get_status
-    get_payment
+    get_payment_status
   end
 
   private
 
   attr_reader :payment_amount,:payment_method, :client, :buyer, :method
 
-  def get_status
-    return nil
+  def get_payment_status
+    Payment.find_by(id: @payment_id)
   end
 
   def create_payment_method

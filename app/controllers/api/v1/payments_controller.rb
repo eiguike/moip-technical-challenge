@@ -11,7 +11,7 @@ class Api::V1::PaymentsController < ApplicationController
   end
 
   def show
-    payment = PaymentService.get_status(payment_show_params)
+    payment = PaymentService.get_status(params)
     if payment
       render json: payment, status: 200
     else
@@ -31,9 +31,5 @@ class Api::V1::PaymentsController < ApplicationController
                                                :number,
                                                :expiration_date,
                                                :cvv])
-  end
-
-  def payment_show_params
-    params.require(:payment, {}).permit(:id)
   end
 end
