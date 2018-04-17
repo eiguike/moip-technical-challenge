@@ -20,6 +20,7 @@ class Api::V1::PaymentsController < ApplicationController
       render json: payment, status: 200
     else
       render json: {}, status: 400
+    end
   end
 
   private

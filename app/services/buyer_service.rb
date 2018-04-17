@@ -13,12 +13,16 @@ class BuyerService
 
   private
   def create_buyer
+    buyer = Buyer.find_by(CPF: @buyer[:cpf])
+    if buyer
+      return buyer
+    end
+
     buyer = Buyer.new(name: @buyer[:name],
                       email: @buyer[:email],
                       CPF: @buyer[:cpf])
-    if buyer.valid?
-      buyer.save
-      return buyer
+    if buyer.save
+      buyera
     else
       return nil
     end
