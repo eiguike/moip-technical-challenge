@@ -47,6 +47,18 @@ RSpec.describe Payment, type: :model do
       expect(payment).to_not be_valid
     end
 
+    it "is not valid when status is empty" do
+      buyer = Buyer.create(:name => Faker::Name.name, :email => Faker::Internet.email, :CPF => "111.111.111-11")
+      client = Client.create(:name => Faker::Company.name)
+      boleto = Boleto.create(:number => Faker::Number.number(25))
+
+      payment = Payment.new(:amount => Faker::Number.decimal(2),
+                            :buyer => buyer,
+                            :method => boleto,
+                            :client => client)
+      expect(payment).to_not be_valid
+    end
+
     it "is valid when has everything and it is for boleto" do
       buyer = Buyer.create(:name => Faker::Name.name, :email => Faker::Internet.email, :CPF => "111.111.111-11")
       client = Client.create(:name => Faker::Company.name)
