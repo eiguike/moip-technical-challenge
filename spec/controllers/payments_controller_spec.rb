@@ -78,9 +78,23 @@ RSpec.describe Api::V1::PaymentsController, type: :controller do
   end
 
   describe "GET #show" do
+    before do
+      client = Client.create(id: 1, name: Faker::Company.name)
+      buyer = Buyer.create(name: Faker::Name.name,
+                           email: Faker::Internet.email,
+                           CPF: "111.111.111-22")
+      card = Card.create(holder_name: client.name,
+                         expiration_date: Time.now + 1.year,
+                         number: Faker::Number.number(15),
+                         cvv: Faker::Number.number(3))
+      payment = Payment.create(amount: "123.30",
+                               buyer: buyer,
+                               client: client,
+                               method: card)
+      get :show, params: { id: payment.id }
+    end
+
     it "returns http success" do
-      get :show, params: {:id => 1}
-      ## expect(response.status).to eq 200
       expect(response).to have_http_status(200)
     end
   end
