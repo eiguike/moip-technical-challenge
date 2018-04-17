@@ -90,7 +90,8 @@ RSpec.describe Api::V1::PaymentsController, type: :controller do
       payment = Payment.create(amount: "123.30",
                                buyer: buyer,
                                client: client,
-                               method: card)
+                               method: card,
+                               status: :success)
       get :show, params: { id: payment.id }
     end
 
