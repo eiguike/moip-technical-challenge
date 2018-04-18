@@ -37,11 +37,19 @@ class PaymentService
       buyer = Buyer.where(@buyer).first_or_create
       method = create_payment_method
 
+      # mocking results
+      status = "success"
+      if payment_method == "Card"
+        if rand > 0.94
+          status = "fail"
+        end
+      end
+
       payment = Payment.create(method: method,
                                buyer: buyer,
                                amount: @payment_amount,
                                client: client,
-                               status: :success)
+                               status: status)
       if payment.method_type == "Boleto"
         return payment.method
       end
