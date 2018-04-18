@@ -98,5 +98,9 @@ RSpec.describe Api::V1::PaymentsController, type: :controller do
     it "returns http success" do
       expect(response).to have_http_status(200)
     end
+
+    it "returns payment status" do
+      expect(response.body).to eq "success"
+    end
   end
 end
