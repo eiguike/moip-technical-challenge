@@ -11,9 +11,9 @@ class Api::V1::PaymentsController < ApplicationController
   end
 
   def show
-    payment = PaymentService.get_status(params)
+    payment = PaymentStatusService.get_status(params)
     if payment
-      render json: payment, status: 200
+      render json: payment.status, status: 200
     else
       render json: {}, status: 400
     end
@@ -26,7 +26,7 @@ class Api::V1::PaymentsController < ApplicationController
                                       client: [:client_id],
                                       buyer: [:name,
                                               :email,
-                                              :cpf],
+                                              :CPF],
                                       method: [:holder_name,
                                                :number,
                                                :expiration_date,

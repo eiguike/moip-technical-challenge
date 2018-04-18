@@ -1,23 +1,10 @@
 class PaymentService
   def initialize(params)
-    if params.key? :method_type
-      @payment_method = params[:method_type]
-    end
-    if params.key? :amount
-      @payment_amount = params[:amount]
-    end
-    if params.key? :client
-      @client = params[:client]
-    end
-    if params.key? :buyer
-      @buyer = params[:buyer]
-    end
-    if params.key? :method
-      @method = params[:method]
-    end
-    if params.key? :id
-      @payment_id = params[:id]
-    end
+    @payment_method = params[:method_type]
+    @payment_amount = params[:amount]
+    @client = params[:client]
+    @buyer = params[:buyer]
+    @method = params[:method]
   end
 
   def self.perform(params)
@@ -25,50 +12,40 @@ class PaymentService
   end
 
   def perform
+    return unless valid?
     create_payment
   end
 
-  def self.get_status(params)
-    new(params).get_status
-  end
-
-  def get_status
-    get_payment_status
-  end
-
   private
-
   attr_reader :payment_amount,:payment_method, :client, :buyer, :method
 
-  def get_payment_status
-    Payment.find_by(id: @payment_id)
+  def valid?
+    @payment_method && @payment_amount && @client && @buyer
   end
 
   def create_payment_method
     if @payment_method == "Boleto"
       Boleto.create(number: Faker::Number.number(25))
     elsif @payment_method == "Card"
-      Card.create(@method)
+      Card.where(@method).first_or_create
     end
   end
 
   def create_payment
-    client = Client.find_by(id: @client[:client_id])
-    return if client.nil?
+    ActiveRecord::Base.transaction do
+      client = Client.where(id: @client[:client_id]).first_or_create(name: Faker::Company.name)
+      buyer = Buyer.where(@buyer).first_or_create
+      method = create_payment_method
 
-    buyer = BuyerService.perform(@buyer)
-    return if buyer.nil?
-
-    method = create_payment_method
-    return if method.nil?
-    payment = Payment.create(method: method,
-                             buyer: buyer,
-                             amount: @payment_amount,
-                             client: client)
-
-    if payment.method_type == "Boleto"
-      return payment.method
+      payment = Payment.create(method: method,
+                               buyer: buyer,
+                               amount: @payment_amount,
+                               client: client,
+                               status: :success)
+      if payment.method_type == "Boleto"
+        return payment.method
+      end
+      return payment
     end
-    return payment
   end
 end
