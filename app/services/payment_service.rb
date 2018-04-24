@@ -27,14 +27,15 @@ class PaymentService
     if @payment_method == "Boleto"
       Boleto.create(number: Faker::Number.number(25))
     elsif @payment_method == "Card"
-      Card.where(@method).first_or_create
+      Card.where(@method).find_or_create_by(@method)
     end
   end
 
   def create_payment
     ActiveRecord::Base.transaction do
-      client = Client.where(id: @client[:client_id]).first_or_create(name: Faker::Company.name)
-      buyer = Buyer.where(@buyer).first_or_create
+      client = Client.find_by(id: @client[:client_id])
+      return unless client != nil
+      buyer = Buyer.where(@buyer).find_or_create_by(@buyer)
       method = create_payment_method
 
       # mocking results
