@@ -24,5 +24,19 @@ RSpec.describe Buyer, type: :model do
       buyer = Buyer.new(:name => "João", :email => "teste2@gmail.com", :CPF => "111.111.111-11")
       expect(buyer).to_not be_valid
     end
+
+    it "is not valid when the email does not follow the correct format" do
+      buyer = Buyer.new(:name => "João", :email => "testegmail.com", :CPF => "111.111.111-11")
+      expect(buyer).to_not be_valid
+    end
+
+    it "is not valid when the CPF does not follow the correct format" do
+      buyer = Buyer.new(:name => "João", :email => "testegmail.com", :CPF => "111.111.111-aa")
+      expect(buyer).to_not be_valid
+    end
+
+    it { should validate_presence_of(:email) }
+    it { should validate_presence_of(:CPF) }
+    it { should validate_presence_of(:name) }
   end
 end
