@@ -7,4 +7,6 @@ class Buyer < ApplicationRecord
   validates :CPF, format: { with: /\A\d{3].\d{3].\d{3]-\d{2}\Z/,
                             message: "CPF follows the format: XXX.XXX.XXX-XX, which X is a digit" }
 
+  has_many :payments
+
 end
