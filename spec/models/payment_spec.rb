@@ -88,5 +88,11 @@ RSpec.describe Payment, type: :model do
       expect(payment).to be_valid
     end
 
+    it { should validate_presence_of(:amount) }
+
+    it { should belong_to(:client) }
+    it { should belong_to(:buyer) }
+    it { should belong_to(:method) }
+
   end
 end

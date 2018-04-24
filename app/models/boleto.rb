@@ -5,6 +5,5 @@ class Boleto < ApplicationRecord
                                message: "Boleto's number should have 47 digits" },
                      length: { is: 47 }
 
-
   has_many :payments, as: :method
 end
