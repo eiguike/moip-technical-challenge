@@ -20,6 +20,16 @@ class PaymentStatusService
   end
 
   def get_payment_status
-    Payment.find_by(id: @payment_id)
+    payment = Payment.find_by(id: @payment_id)
+    return nil unless payment != nil
+
+    payment_json = payment.slice(:id, :amount, :method_type, :status)
+    payment_json[:client] = payment.client.slice(:id)
+    payment_json[:buyer] = payment.buyer.slice(:name, :email, :CPF)
+
+    if (payment.method_type == "Card")
+      payment_json[:method] = payment.method.slice(:holder_name, :number, :expiration_date, :cvv)
+    end
+    return payment_json
   end
 end

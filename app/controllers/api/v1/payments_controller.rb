@@ -13,7 +13,7 @@ class Api::V1::PaymentsController < ApplicationController
   def show
     payment = PaymentStatusService.get_status(params)
     if payment
-      render json: payment.status, status: 200
+      render json: payment, status: 200
     else
       render json: {}, status: 400
     end
