@@ -39,6 +39,50 @@ RSpec.describe Api::V1::PaymentsController, type: :controller do
     end
   end
 
+  describe "Fail POST #create for boleto" do
+    it "not pay as boleto and return http status 400" do
+      payments = {
+        payment: {
+          method_type: "Boleto",
+          amount: "123.30",
+          buyer: {
+            name: Faker::Name.name,
+            email: Faker::Internet.email,
+            cpf: "123.123.123-43"
+          }
+        }
+      }
+      post :create, params: payments
+      expect(response).to have_http_status(400)
+    end
+    it "not pay as boleto and return http status 400" do
+      payments = {
+        payment: {
+          method_type: "Boleto",
+          amount: "123.30",
+          client: 1
+        }
+      }
+      post :create, params: payments
+      expect(response).to have_http_status(400)
+    end
+    it "not pay as boleto and return http status 400" do
+      payments = {
+        payment: {
+          method_type: "Boleto",
+          amount: "123.30"
+        }
+      }
+      post :create, params: payments
+      expect(response).to have_http_status(400)
+    end
+    it "not pay as boleto and return http status 400" do
+      payments = {}
+      post :create, params: payments
+      expect(response).to have_http_status(400)
+    end
+  end
+
   describe "POST #create for card" do
     let(:client) do
       Client.create(id: 1, name: Faker::Company.name)
@@ -63,7 +107,7 @@ RSpec.describe Api::V1::PaymentsController, type: :controller do
           },
           method: {
             holder_name: buyer.name,
-            number: Faker::Number.number(15),
+            number: Faker::Number.number(16),
             expiration_date: Time.now + 1.year,
             cvv: Faker::Number.number(3)
           }
@@ -103,4 +147,19 @@ RSpec.describe Api::V1::PaymentsController, type: :controller do
       expect(response.body).to eq "success"
     end
   end
+
+
+  describe "Fail GET #show" do
+
+    it "returns http bad request" do
+      get :show, params: { id: 1 }
+      expect(response).to have_http_status(400)
+    end
+
+    it "returns payment status" do
+      get :show, params: { id: 1 }
+      expect(response.body).not_to eq "success"
+    end
+  end
+
 end
