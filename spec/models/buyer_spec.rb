@@ -35,6 +35,11 @@ RSpec.describe Buyer, type: :model do
       expect(buyer).to_not be_valid
     end
 
+    it "is valid when every validations is satisfied" do
+      buyer = Buyer.new(:name => "João", :email => "teste@gmail.com", :CPF => "111.111.111-11")
+      expect(buyer).to be_valid
+    end
+
     it { should validate_presence_of(:email) }
     it { should validate_presence_of(:CPF) }
     it { should validate_presence_of(:name) }
