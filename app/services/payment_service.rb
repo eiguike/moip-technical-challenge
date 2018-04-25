@@ -25,7 +25,7 @@ class PaymentService
 
   def create_payment_method
     if @payment_method == "Boleto"
-      Boleto.create(number: Faker::Number.number(25))
+      Boleto.create(number: Faker::Number.number(47))
     elsif @payment_method == "Card"
       Card.where(@method).find_or_create_by(@method)
     end
@@ -52,9 +52,9 @@ class PaymentService
                                client: client,
                                status: status)
       if payment.method_type == "Boleto"
-        return payment.method
+        return { "id": payment.id, "number": method.number }
       end
-      return payment
+      return { "id": payment.id, "status": payment.status }
     end
   end
 end
