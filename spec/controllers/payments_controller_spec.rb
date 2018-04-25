@@ -34,7 +34,7 @@ RSpec.describe Api::V1::PaymentsController, type: :controller do
 
     it "pays as boleto and return boleto's number" do
       boleto = JSON.parse(response.body)
-      expect(boleto["number"].length).to eq 25
+      expect(boleto["number"].length).to eq 47
       expect(Integer(boleto["number"])).to be_kind_of Integer
     end
   end
@@ -129,7 +129,7 @@ RSpec.describe Api::V1::PaymentsController, type: :controller do
                            CPF: "111.111.111-22")
       card = Card.create(holder_name: client.name,
                          expiration_date: Time.now + 1.year,
-                         number: Faker::Number.number(15),
+                         number: Faker::Number.number(16),
                          cvv: Faker::Number.number(3))
       payment = Payment.create(amount: "123.30",
                                buyer: buyer,
@@ -144,7 +144,7 @@ RSpec.describe Api::V1::PaymentsController, type: :controller do
     end
 
     it "returns payment status" do
-      expect(response.body).to eq "success"
+      expect(JSON.parse(response.body)["status"]).to eq "success"
     end
   end
 
